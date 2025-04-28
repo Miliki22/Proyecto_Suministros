@@ -3,6 +3,7 @@
 
 # Caché de Python
 __pycache__/
+**/__pycache__/    # Todas las subcarpetas
 *.pyc
 
 # Archivos de base de datos (si no quieres subir tienda.db)
