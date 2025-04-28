@@ -1,0 +1,6 @@
+{% extends 'base.html' %}
+{% block title %}Dashboard Usuario{% endblock %}
+{% block content %}
+<h2>Bienvenido, Usuario {{ current_user.username }}</h2>
+<a href="{{ url_for('auth.logout') }}">Logout</a>
+{% endblock %}
