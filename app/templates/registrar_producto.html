@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% block title %}Registrar Producto{% endblock %}
+
+{% block content %}
+  <h2>Registrar nuevo producto</h2>
+
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      <ul>
+        {% for message in messages %}
+          <li>{{ message }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+  {% endwith %}
+
+  <form method="POST">
+    {{ form.hidden_tag() }}
+
+    <p>
+      {{ form.nombre.label }}<br>
+      {{ form.nombre(size=32) }}
+    </p>
+    <p>
+      {{ form.descripcion.label }}<br>
+      {{ form.descripcion(size=64) }}
+    </p>
+    <p>
+      {{ form.precio.label }}<br>
+      {{ form.precio(step="0.01") }}
+    </p>
+    <p>
+      {{ form.stock.label }}<br>
+      {{ form.stock() }}
+    </p>
+    <p>
+      {{ form.proveedor_id.label }}<br>
+      {{ form.proveedor_id() }}
+    </p>
+    <p>{{ form.submit() }}</p>
+  </form>
+{% endblock %}

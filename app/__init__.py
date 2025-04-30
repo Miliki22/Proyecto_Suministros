@@ -4,6 +4,7 @@ from flask_login import LoginManager  # Importa LoginManager para manejar la aut
 
 db = SQLAlchemy()  # Inicializa la extensión SQLAlchemy (ORM)
 login_manager = LoginManager()  # Inicializa la extensión LoginManager (manejo de sesiones de usuario)
+login_manager.login_message = "Por favor inicia sesión para acceder a esta página."  # Mensaje de error para redirigir al login
 
 def create_app():
     app = Flask(__name__)   # Crea una instancia de la aplicación Flask
