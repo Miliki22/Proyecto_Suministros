@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, request, flash, redirect, url_for # Importa Blueprint para agrupar rutas, y render_template para cargar HTML
 from flask_login import login_required, current_user  # Importa decoradores para requerir autenticación y obtener el usuario actual
 from .models import User, Proveedor, Producto, Venta  # Importa los modelos de la base de datos
-from .forms import ProductoForm  # Importa el formulario para productos
+from .forms import ProductoForm, ProveedorForm # Importa el formulario para productos
 from app import db  # Importa la instancia de SQLAlchemy para interactuar con la base de datos
 
 main = Blueprint('main', __name__)   # Crea un Blueprint llamado 'main' para agrupar las rutas principales de la aplicación (no de autenticación)
@@ -88,3 +88,51 @@ def editar_producto(id):
         return redirect(url_for('main.listar_productos'))
 
     return render_template('editar_producto.html', form=form, producto=producto)
+
+@main.route('/proveedores')
+@login_required
+def listar_proveedores():
+    if current_user.role != 'admin':
+        flash('Acceso denegado')
+        return redirect(url_for('main.dashboard'))
+
+    proveedores = Proveedor.query.all()
+    return render_template('listar_proveedores.html', proveedores=proveedores)
+
+@main.route('/registrar_proveedor', methods=['GET', 'POST'])
+@login_required
+def registrar_proveedor():
+    if current_user.role != 'admin':
+        flash('Acceso denegado')
+        return redirect(url_for('main.dashboard'))
+
+    form = ProveedorForm()
+    if form.validate_on_submit():
+        nuevo_proveedor = Proveedor(
+            nombre=form.nombre.data,
+            email=form.email.data,
+            telefono=form.telefono.data
+        )
+        db.session.add(nuevo_proveedor)
+        db.session.commit()
+        flash('Proveedor registrado correctamente.')
+        return redirect(url_for('main.dashboard'))
+
+    return render_template('registrar_proveedor.html', form=form)
+
+@main.route('/eliminar_proveedor/<int:id>', methods=['POST'])
+@login_required
+def eliminar_proveedor(id):
+    if current_user.role != 'admin':
+        flash('Acceso denegado')
+        return redirect(url_for('main.dashboard'))
+
+    proveedor = Proveedor.query.get_or_404(id)
+    if proveedor.productos:
+        flash("No se puede eliminar el proveedor porque tiene productos asociados.")
+    else:
+        db.session.delete(proveedor)
+        db.session.commit()
+        flash('Proveedor eliminado correctamente.')
+
+    return redirect(url_for('main.listar_proveedores'))

@@ -10,3 +10,9 @@ class ProductoForm(FlaskForm):
     stock = IntegerField('Stock', validators=[DataRequired()])
     proveedor_id = SelectField('Proveedor', coerce=int, validators=[DataRequired()])
     submit = SubmitField('Registrar Producto')
+
+class ProveedorForm(FlaskForm):
+    nombre = StringField('Nombre', validators=[DataRequired()])
+    email = StringField('Email')
+    telefono = StringField('Teléfono')
+    submit = SubmitField('Registrar Proveedor')

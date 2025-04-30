@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block title %}Lista de Proveedores{% endblock %}
+
+{% block content %}
+<h2>Lista de Proveedores</h2>
+
+{% if proveedores %}
+  <table border="1" cellpadding="5" cellspacing="0">
+    <thead>
+      <tr>
+        <th>Nombre</th>
+        <th>Email</th>
+        <th>Teléfono</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for proveedor in proveedores %}
+      <tr>
+        <td>{{ proveedor.nombre }}</td>
+        <td>{{ proveedor.email }}</td>
+        <td>{{ proveedor.telefono }}</td>
+        <td>
+          <form action="{{ url_for('main.eliminar_proveedor', id=proveedor.id) }}" method="POST" style="display:inline;">
+            <button type="submit" onclick="return confirm('¿Eliminar este proveedor?')">Eliminar</button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% else %}
+  <p>No hay proveedores registrados.</p>
+{% endif %}
+{% endblock %}
