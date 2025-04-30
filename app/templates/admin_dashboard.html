@@ -1,7 +1,12 @@
 {% extends 'base.html' %}
-{% block title %}Dashboard Admin{% endblock %}
+{% block title %}Panel de Administrador{% endblock %}
+
 {% block content %}
 <h2>Bienvenido, Administrador {{ current_user.username }}</h2>
-<a href="{{ url_for('auth.logout') }}">Logout</a>
-{% endblock %}
 
+<ul>
+  <li><a href="{{ url_for('main.listar_productos') }}">Ver productos</a></li>
+  <li><a href="{{ url_for('main.registrar_producto') }}">Registrar nuevo producto</a></li>
+  <li><a href="{{ url_for('auth.logout') }}">Cerrar sesión</a></li>
+</ul>
+{% endblock %}

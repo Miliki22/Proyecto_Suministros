@@ -18,6 +18,13 @@ def dashboard():
         return render_template('admin_dashboard.html')  # Renderiza la plantilla admin_dashboard.html si el usuario es administrador
     else:
         return render_template('user_dashboard.html')   # Renderiza la plantilla user_dashboard.html si el usuario es un usuario normal 
+
+@main.route('/productos')
+@login_required
+def listar_productos():
+    productos = Producto.query.all()
+    return render_template('listar_productos.html', productos=productos)
+
     
 @main.route('/registrar_producto', methods=['GET', 'POST'])
 @login_required
@@ -43,3 +50,41 @@ def registrar_producto():
         return redirect(url_for('main.dashboard'))
 
     return render_template('registrar_producto.html', form=form)
+
+@main.route('/eliminar_producto/<int:id>', methods=['POST'])
+@login_required
+def eliminar_producto(id):
+    if current_user.role != 'admin':
+        flash('Acceso denegado')
+        return redirect(url_for('main.dashboard'))
+
+    producto = Producto.query.get_or_404(id)
+    db.session.delete(producto)
+    db.session.commit()
+    flash(f'Producto "{producto.nombre}" eliminado correctamente.')
+    return redirect(url_for('main.listar_productos'))
+
+@main.route('/editar_producto/<int:id>', methods=['GET', 'POST'])
+@login_required
+def editar_producto(id):
+    if current_user.role != 'admin':
+        flash('Acceso denegado')
+        return redirect(url_for('main.dashboard'))
+
+    producto = Producto.query.get_or_404(id)
+    form = ProductoForm(obj=producto)  # Rellena el formulario con los datos existentes
+
+    form.proveedor_id.choices = [(p.id, p.nombre) for p in Proveedor.query.all()]
+
+    if form.validate_on_submit():
+        producto.nombre = form.nombre.data
+        producto.descripcion = form.descripcion.data
+        producto.precio = form.precio.data
+        producto.stock = form.stock.data
+        producto.proveedor_id = form.proveedor_id.data
+
+        db.session.commit()
+        flash(f'Producto "{producto.nombre}" actualizado correctamente.')
+        return redirect(url_for('main.listar_productos'))
+
+    return render_template('editar_producto.html', form=form, producto=producto)

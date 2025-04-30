@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block title %}Editar Producto{% endblock %}
+
+{% block content %}
+<h2>Editar producto: {{ producto.nombre }}</h2>
+
+<form method="POST">
+  {{ form.hidden_tag() }}
+
+  <p>{{ form.nombre.label }}<br>{{ form.nombre(size=32) }}</p>
+  <p>{{ form.descripcion.label }}<br>{{ form.descripcion(size=64) }}</p>
+  <p>{{ form.precio.label }}<br>{{ form.precio(step="0.01") }}</p>
+  <p>{{ form.stock.label }}<br>{{ form.stock() }}</p>
+  <p>{{ form.proveedor_id.label }}<br>{{ form.proveedor_id() }}</p>
+
+  <p>{{ form.submit(value='Actualizar') }}</p>
+</form>
+
+<p><a href="{{ url_for('main.listar_productos') }}">← Volver a la lista</a></p>
+{% endblock %}
