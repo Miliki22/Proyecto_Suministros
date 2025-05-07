@@ -45,5 +45,10 @@ class Venta(db.Model):
     total = db.Column(db.Float, nullable=False)
     fecha = db.Column(db.DateTime, default=datetime.utcnow)
 
+    # Relaciones para acceder a producto y usuario desde la venta
+    producto = db.relationship('Producto', backref='ventas', lazy=True)
+    usuario = db.relationship('User', backref='ventas', lazy=True)
+
     def __repr__(self):
         return f"<Venta {self.id} - Producto {self.producto_id} - Usuario {self.usuario_id}>"
+

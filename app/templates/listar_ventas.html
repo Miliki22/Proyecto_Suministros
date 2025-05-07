@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block title %}Listado de Ventas{% endblock %}
+
+{% block content %}
+<h2>Ventas registradas</h2>
+
+{% if ventas %}
+  <table border="1" cellpadding="5" cellspacing="0">
+    <thead>
+      <tr>
+        <th>Fecha</th>
+        <th>Usuario</th>
+        <th>Producto</th>
+        <th>Cantidad</th>
+        <th>Total</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for venta in ventas %}
+      <tr>
+        <td>{{ venta.fecha.strftime('%d/%m/%Y %H:%M') }}</td>
+        <td>{{ venta.usuario.username }}</td>
+        <td>{{ venta.producto.nombre }}</td>
+        <td>{{ venta.cantidad }}</td>
+        <td>${{ venta.total }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% else %}
+  <p>No se han registrado ventas aún.</p>
+{% endif %}
+{% endblock %}

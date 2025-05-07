@@ -22,3 +22,8 @@ class RegistroForm(FlaskForm):
     password = PasswordField('Contraseña', validators=[DataRequired()])
     confirmar = PasswordField('Confirmar contraseña', validators=[DataRequired()])
     submit = SubmitField('Registrarse')
+
+class VentaForm(FlaskForm):
+    producto_id = SelectField('Producto', coerce=int, validators=[DataRequired()])
+    cantidad = IntegerField('Cantidad', validators=[DataRequired()])
+    submit = SubmitField('Confirmar Venta')

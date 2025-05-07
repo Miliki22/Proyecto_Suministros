@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, request, flash, redirect, url_for # Importa Blueprint para agrupar rutas, y render_template para cargar HTML
 from flask_login import login_required, current_user  # Importa decoradores para requerir autenticación y obtener el usuario actual
 from .models import User, Proveedor, Producto, Venta  # Importa los modelos de la base de datos
-from .forms import ProductoForm, ProveedorForm # Importa el formulario para productos
+from .forms import ProductoForm, ProveedorForm, VentaForm # Importa el formulario para productos
 from app import db  # Importa la instancia de SQLAlchemy para interactuar con la base de datos
 
 main = Blueprint('main', __name__)   # Crea un Blueprint llamado 'main' para agrupar las rutas principales de la aplicación (no de autenticación)
@@ -136,3 +136,55 @@ def eliminar_proveedor(id):
         flash('Proveedor eliminado correctamente.')
 
     return redirect(url_for('main.listar_proveedores'))
+
+
+@main.route('/realizar_venta', methods=['GET', 'POST'])
+@login_required
+def realizar_venta():
+    form = VentaForm()
+    form.producto_id.choices = [(p.id, p.nombre) for p in Producto.query.all()]
+
+    if form.validate_on_submit():
+        producto = Producto.query.get(form.producto_id.data)
+
+        if not producto:
+            flash('Producto no válido.')
+            return redirect(url_for('main.realizar_venta'))
+
+        if form.cantidad.data > producto.stock:
+            flash('Stock insuficiente para realizar la venta.')
+            return redirect(url_for('main.realizar_venta'))
+
+        total = producto.precio * form.cantidad.data
+
+        nueva_venta = Venta(
+            producto_id=producto.id,
+            usuario_id=current_user.id,
+            cantidad=form.cantidad.data,
+            total=total
+        )
+
+        producto.stock -= form.cantidad.data  # Descontar stock
+        db.session.add(nueva_venta)
+        db.session.commit()
+        flash('Venta realizada con éxito.')
+        return redirect(url_for('main.dashboard'))
+
+    return render_template('realizar_venta.html', form=form)
+
+@main.route('/ventas')
+@login_required
+def listar_ventas():
+    if current_user.role != 'admin':
+        flash('Acceso denegado')
+        return redirect(url_for('main.dashboard'))
+
+    ventas = Venta.query.order_by(Venta.fecha.desc()).all()
+    return render_template('listar_ventas.html', ventas=ventas)
+
+
+@main.route('/mis_compras')
+@login_required
+def mis_compras():
+    ventas = Venta.query.filter_by(usuario_id=current_user.id).order_by(Venta.fecha.desc()).all()
+    return render_template('mis_compras.html', ventas=ventas)

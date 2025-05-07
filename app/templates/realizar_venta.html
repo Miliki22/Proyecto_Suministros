@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block title %}Realizar Venta{% endblock %}
+
+{% block content %}
+<h2>Realizar una venta</h2>
+
+<form method="POST">
+  {{ form.hidden_tag() }}
+  <p>{{ form.producto_id.label }}<br>{{ form.producto_id() }}</p>
+  <p>{{ form.cantidad.label }}<br>{{ form.cantidad() }}</p>
+  <p>{{ form.submit() }}</p>
+</form>
+
+<p><a href="{{ url_for('main.dashboard') }}">← Volver al inicio</a></p>
+{% endblock %}
