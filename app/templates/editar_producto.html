@@ -12,6 +12,11 @@
   <p>{{ form.precio.label }}<br>{{ form.precio(step="0.01") }}</p>
   <p>{{ form.stock.label }}<br>{{ form.stock() }}</p>
   <p>{{ form.stock_maximo.label }}<br>{{ form.stock_maximo() }}</p>
+
+  {% if current_user.role == 'admin' %}
+  <p>{{ form.costo_proveedor.label }}<br>{{ form.costo_proveedor(step="0.01") }}</p>
+  {% endif %}
+
   <p>{{ form.proveedor_id.label }}<br>{{ form.proveedor_id() }}</p>
 
   <p>{{ form.submit(value='Actualizar') }}</p>

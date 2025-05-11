@@ -41,6 +41,7 @@ def registrar_producto():
             nombre=form.nombre.data,
             descripcion=form.descripcion.data,
             precio=form.precio.data,
+            costo_proveedor=form.costo_proveedor.data,
             stock=form.stock.data,
             proveedor_id=form.proveedor_id.data
         )
@@ -80,6 +81,7 @@ def editar_producto(id):
         producto.nombre = form.nombre.data
         producto.descripcion = form.descripcion.data
         producto.precio = form.precio.data
+        costo_proveedor=form.costo_proveedor.data
         producto.stock = form.stock.data
         producto.proveedor_id = form.proveedor_id.data
 

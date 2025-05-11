@@ -30,6 +30,7 @@ class Producto(db.Model):
     nombre = db.Column(db.String(150), nullable=False)
     descripcion = db.Column(db.Text)
     precio = db.Column(db.Float, nullable=False)
+    costo_proveedor = db.Column(db.Float, nullable=False)
     stock = db.Column(db.Integer, nullable=False)
     stock_maximo = db.Column(db.Integer, nullable=False, default=100)  
     proveedor_id = db.Column(db.Integer, db.ForeignKey('proveedor.id'), nullable=False)

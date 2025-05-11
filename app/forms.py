@@ -7,6 +7,7 @@ class ProductoForm(FlaskForm):
     nombre = StringField('Nombre', validators=[DataRequired()])
     descripcion = StringField('Descripción')
     precio = FloatField('Precio', validators=[DataRequired()])
+    costo_proveedor = FloatField('Costo al proveedor', validators=[DataRequired()])
     stock = IntegerField('Stock', validators=[DataRequired()])
     stock_maximo = IntegerField('Stock Máximo', validators=[DataRequired()])
     proveedor_id = SelectField('Proveedor', coerce=int, validators=[DataRequired()])
