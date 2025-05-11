@@ -31,6 +31,7 @@ class Producto(db.Model):
     descripcion = db.Column(db.Text)
     precio = db.Column(db.Float, nullable=False)
     stock = db.Column(db.Integer, nullable=False)
+    stock_maximo = db.Column(db.Integer, nullable=False, default=100)  
     proveedor_id = db.Column(db.Integer, db.ForeignKey('proveedor.id'), nullable=False)
 
     def __repr__(self):

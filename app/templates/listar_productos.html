@@ -24,7 +24,12 @@
         <td>{{ producto.nombre }}</td>
         <td>{{ producto.descripcion }}</td>
         <td>${{ producto.precio }}</td>
-        <td>{{ producto.stock }}</td>
+        <td>
+          {{ producto.stock }}
+          {% if producto.stock <= producto.stock_maximo * 0.1 %}
+          <span style="color: red; font-weight: bold;">⚠ Bajo stock </span>
+        {% endif %}
+        </td>
         <td>{{ producto.proveedor.nombre }}</td>
         {% if current_user.role == 'admin' %}
           <td>
