@@ -33,7 +33,7 @@ def register():
     form = RegistroForm()
 
     if form.validate_on_submit():
-        if form.password.data != form.confirmar.data:
+        if form.password.data != form.confirm_password.data:
             flash("Las contraseñas no coinciden.")
             return render_template('register.html', form=form)
 
@@ -44,8 +44,9 @@ def register():
 
         nuevo_usuario = User(
             username=form.username.data,
+            email=form.email.data,  
             password=generate_password_hash(form.password.data),
-            role='user'  # siempre se registra como usuario normal
+            role='user'
         )
         db.session.add(nuevo_usuario)
         db.session.commit()
@@ -53,5 +54,3 @@ def register():
         return redirect(url_for('auth.login'))
 
     return render_template('register.html', form=form)
-
-

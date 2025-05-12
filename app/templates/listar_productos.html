@@ -2,49 +2,62 @@
 {% block title %}Lista de Productos{% endblock %}
 
 {% block content %}
-<h2>Lista de Productos</h2>
+<h2 class="animated fadeInDown">Lista de Productos</h2>
 
-{% if productos %}
-  <table border="1" cellpadding="5" cellspacing="0">
-    <thead>
-      <tr>
-        <th>Nombre</th>
-        <th>Descripción</th>
-        <th>Precio</th>
-        <th>Stock</th>
-        <th>Proveedor</th>
-        {% if current_user.role == 'admin' %}
-          <th>Acciones</th>
-        {% endif %}
-      </tr>
-    </thead>
-    <tbody>
-      {% for producto in productos %}
-      <tr>
-        <td>{{ producto.nombre }}</td>
-        <td>{{ producto.descripcion }}</td>
-        <td>${{ producto.precio }}</td>
-        <td>
+<table border="1" cellpadding="8" cellspacing="0" >
+  <thead>
+    <tr>
+      <th>Nombre</th>
+      <th>Descripción</th>
+      <th>Precio</th>
+      <th>Stock</th>
+      {% if current_user.role == 'admin' %}
+        <th>Costo Proveedor</th>
+      {% endif %}
+      <th>Proveedor</th>
+      <th>Acciones</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for producto in productos %}
+    <tr>
+      <td>{{ producto.nombre }}</td>
+      <td>{{ producto.descripcion }}</td>
+      <td>${{ producto.precio }}</td>
+      <td>
+        {% if producto.stock <= producto.stock_maximo * 0.1 %}
+          <span style="color: red;">{{ producto.stock }} ⚠ Bajo stock</span>
+        {% else %}
           {{ producto.stock }}
-          {% if producto.stock <= producto.stock_maximo * 0.1 %}
-          <span style="color: red; font-weight: bold;">⚠ Bajo stock </span>
         {% endif %}
-        </td>
-        <td>{{ producto.proveedor.nombre }}</td>
+      </td>
+      {% if current_user.role == 'admin' %}
+        <td>${{ producto.costo_proveedor }}</td>
+      {% endif %}
+      <td>
+        {% if producto.proveedor %}
+          {{ producto.proveedor.nombre }}
+        {% else %}
+          Sin proveedor
+        {% endif %}
+      </td>
+      <td>
         {% if current_user.role == 'admin' %}
-          <td>
-            <a href="{{ url_for('main.editar_producto', id=producto.id) }}">Editar</a> 
-            <form action="{{ url_for('main.eliminar_producto', id=producto.id) }}" method="POST" style="display:inline;">
-                <button type="submit" onclick="return confirm('¿Estás seguro de que deseas eliminar este producto?')">Eliminar</button>
-            </form>    
-          </td>
+          <a href="{{ url_for('main.editar_producto', id=producto.id) }}">Editar</a>
+          <form action="{{ url_for('main.eliminar_producto', id=producto.id) }}" method="post" style="display:inline;">
+            <button type="submit">Eliminar</button>
+          </form>
+        {% else %}
+          -
         {% endif %}
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
-{% else %}
-  <p>No hay productos registrados.</p>
-{% endif %}
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
 
+<p style="text-align: center; margin-top: 20px;">
+  <a href="{{ url_for('main.dashboard') }}">← Volver al inicio</a>
+</p>
 {% endblock %}
+

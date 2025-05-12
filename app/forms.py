@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, FloatField, IntegerField, SubmitField, SelectField, PasswordField
-from wtforms.validators import DataRequired
+from wtforms.validators import DataRequired, Email, EqualTo
 from app.models import Proveedor  
 
 class ProductoForm(FlaskForm):
@@ -21,8 +21,9 @@ class ProveedorForm(FlaskForm):
 
 class RegistroForm(FlaskForm):
     username = StringField('Nombre de usuario', validators=[DataRequired()])
+    email = StringField('Correo electrónico', validators=[DataRequired(), Email()])
     password = PasswordField('Contraseña', validators=[DataRequired()])
-    confirmar = PasswordField('Confirmar contraseña', validators=[DataRequired()])
+    confirm_password = PasswordField('Confirmar contraseña', validators=[DataRequired(), EqualTo('password')])
     submit = SubmitField('Registrarse')
 
 class VentaForm(FlaskForm):

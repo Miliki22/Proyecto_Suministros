@@ -24,6 +24,7 @@ def dashboard():
 def listar_productos():
     productos = Producto.query.all()
     return render_template('listar_productos.html', productos=productos)
+print('listar_productos')
 
     
 @main.route('/registrar_producto', methods=['GET', 'POST'])
@@ -43,6 +44,7 @@ def registrar_producto():
             precio=form.precio.data,
             costo_proveedor=form.costo_proveedor.data,
             stock=form.stock.data,
+            stock_maximo=form.stock_maximo.data,
             proveedor_id=form.proveedor_id.data
         )
         db.session.add(nuevo_producto)
@@ -81,7 +83,7 @@ def editar_producto(id):
         producto.nombre = form.nombre.data
         producto.descripcion = form.descripcion.data
         producto.precio = form.precio.data
-        costo_proveedor=form.costo_proveedor.data
+        producto.costo_proveedor = form.costo_proveedor.data
         producto.stock = form.stock.data
         producto.proveedor_id = form.proveedor_id.data
 

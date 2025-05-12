@@ -1,24 +1,25 @@
-from . import db  # Importa la instancia de SQLAlchemy desde __init__.py
-from flask_login import UserMixin  # Importa UserMixin para manejar la autenticación de usuarios
-from datetime import datetime  # Importa datetime para manejar fechas y horas
+from . import db
+from flask_login import UserMixin
+from datetime import datetime
 
-# Modelo de la tabla 'User' en la base de datos, hereda de SQLAlchemy y UserMixin
-class User(UserMixin, db.Model):  # # Modelo de la tabla 'User' en la base de datos, hereda de SQLAlchemy y UserMixin
-    id = db.Column(db.Integer, primary_key=True) # ID único del usuario (clave primaria)
-    username = db.Column(db.String(150), nullable=False, unique=True)  # Nombre de usuario único, obligatorio y con un máximo de 150 caracteres
-    password = db.Column(db.String(150), nullable=False)  # Contraseña del usuario, obligatoria y con un máximo de 150 caracteres
-    role = db.Column(db.String(50), nullable=False)  # Rol de usuario ('admin' o 'user')
-    
+# Tabla de usuarios con roles (admin o user)
+class User(UserMixin, db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(100), nullable=False, unique=True)
+    email = db.Column(db.String(150), nullable=False, unique=True)
+    password = db.Column(db.String(200), nullable=False)
+    role = db.Column(db.String(10), nullable=False, default='user')  # user o admin
+    ventas = db.relationship('Venta', backref='usuario', lazy=True)
+
     def __repr__(self):
         return f"<User {self.username}>"
 
 # Tabla de proveedores
 class Proveedor(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    nombre = db.Column(db.String(150), nullable=False)
-    email = db.Column(db.String(120))
-    telefono = db.Column(db.String(50))
-
+    nombre = db.Column(db.String(100), nullable=False)
+    email = db.Column(db.String(150))
+    telefono = db.Column(db.String(20))
     productos = db.relationship('Producto', backref='proveedor', lazy=True)
 
     def __repr__(self):
@@ -27,12 +28,12 @@ class Proveedor(db.Model):
 # Tabla de productos
 class Producto(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    nombre = db.Column(db.String(150), nullable=False)
-    descripcion = db.Column(db.Text)
+    nombre = db.Column(db.String(100), nullable=False)
+    descripcion = db.Column(db.String(200))
     precio = db.Column(db.Float, nullable=False)
     costo_proveedor = db.Column(db.Float, nullable=False)
     stock = db.Column(db.Integer, nullable=False)
-    stock_maximo = db.Column(db.Integer, nullable=False, default=100)  
+    stock_maximo = db.Column(db.Integer, nullable=False)
     proveedor_id = db.Column(db.Integer, db.ForeignKey('proveedor.id'), nullable=False)
 
     def __repr__(self):
@@ -46,11 +47,7 @@ class Venta(db.Model):
     cantidad = db.Column(db.Integer, nullable=False)
     total = db.Column(db.Float, nullable=False)
     fecha = db.Column(db.DateTime, default=datetime.utcnow)
-
-    # Relaciones para acceder a producto y usuario desde la venta
-    producto = db.relationship('Producto', backref='ventas', lazy=True)
-    usuario = db.relationship('User', backref='ventas', lazy=True)
+    producto = db.relationship('Producto', backref='ventas')
 
     def __repr__(self):
         return f"<Venta {self.id} - Producto {self.producto_id} - Usuario {self.usuario_id}>"
-
