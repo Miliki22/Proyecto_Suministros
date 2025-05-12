@@ -20,6 +20,10 @@ class Proveedor(db.Model):
     nombre = db.Column(db.String(100), nullable=False)
     email = db.Column(db.String(150))
     telefono = db.Column(db.String(20))
+    direccion = db.Column(db.String(200))
+    cif = db.Column(db.String(50))
+    porcentaje_descuento = db.Column(db.Float)
+    iva = db.Column(db.Float)
     productos = db.relationship('Producto', backref='proveedor', lazy=True)
 
     def __repr__(self):

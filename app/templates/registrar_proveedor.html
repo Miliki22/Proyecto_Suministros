@@ -2,13 +2,19 @@
 {% block title %}Registrar Proveedor{% endblock %}
 
 {% block content %}
-<h2>Registrar nuevo proveedor</h2>
+  <h2>Registrar nuevo proveedor</h2>
 
-<form method="POST">
-  {{ form.hidden_tag() }}
-  <p>{{ form.nombre.label }}<br>{{ form.nombre(size=40) }}</p>
-  <p>{{ form.email.label }}<br>{{ form.email(size=40) }}</p>
-  <p>{{ form.telefono.label }}<br>{{ form.telefono(size=20) }}</p>
-  <p>{{ form.submit() }}</p>
-</form>
+  <form method="POST">
+    {{ form.hidden_tag() }}
+
+    <p>{{ form.nombre.label }}<br>{{ form.nombre(size=40) }}</p>
+    <p>{{ form.email.label }}<br>{{ form.email(size=40) }}</p>
+    <p>{{ form.telefono.label }}<br>{{ form.telefono(size=20) }}</p>
+    <p>{{ form.direccion.label }}<br>{{ form.direccion(size=50) }}</p>
+    <p>{{ form.cif.label }}<br>{{ form.cif(size=30) }}</p>
+    <p>{{ form.porcentaje_descuento.label }}<br>{{ form.porcentaje_descuento(step="0.01") }}</p>
+    <p>{{ form.iva.label }}<br>{{ form.iva(step="0.01") }}</p>
+
+    <p>{{ form.submit() }}</p>
+  </form>
 {% endblock %}

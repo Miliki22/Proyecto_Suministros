@@ -11,6 +11,10 @@
         <th>Nombre</th>
         <th>Email</th>
         <th>Teléfono</th>
+        <th>Dirección</th>
+        <th>CIF</th>
+        <th>Descuento (%)</th>
+        <th>IVA (%)</th>
         <th>Acciones</th>
       </tr>
     </thead>
@@ -20,6 +24,10 @@
         <td>{{ proveedor.nombre }}</td>
         <td>{{ proveedor.email }}</td>
         <td>{{ proveedor.telefono }}</td>
+        <td>{{ proveedor.direccion or '-' }}</td>
+        <td>{{ proveedor.cif or '-' }}</td>
+        <td>{{ proveedor.porcentaje_descuento or '0' }}%</td>
+        <td>{{ proveedor.iva or '0' }}%</td>
         <td>
           <form action="{{ url_for('main.eliminar_proveedor', id=proveedor.id) }}" method="POST" style="display:inline;">
             <button type="submit" onclick="return confirm('¿Eliminar este proveedor?')">Eliminar</button>
@@ -32,4 +40,9 @@
 {% else %}
   <p>No hay proveedores registrados.</p>
 {% endif %}
+
+<p style="text-align: center; margin-top: 20px;">
+  <a href="{{ url_for('main.dashboard') }}">← Volver al inicio</a>
+</p>
 {% endblock %}
+

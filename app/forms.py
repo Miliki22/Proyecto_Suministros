@@ -17,7 +17,11 @@ class ProveedorForm(FlaskForm):
     nombre = StringField('Nombre', validators=[DataRequired()])
     email = StringField('Email')
     telefono = StringField('Teléfono')
-    submit = SubmitField('Registrar Proveedor')
+    direccion = StringField('Dirección')
+    cif = StringField('CIF')
+    porcentaje_descuento = FloatField('Descuento (%)')
+    iva = FloatField('IVA (%)')
+    submit = SubmitField('Registrar')
 
 class RegistroForm(FlaskForm):
     username = StringField('Nombre de usuario', validators=[DataRequired()])

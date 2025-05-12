@@ -115,7 +115,11 @@ def registrar_proveedor():
         nuevo_proveedor = Proveedor(
             nombre=form.nombre.data,
             email=form.email.data,
-            telefono=form.telefono.data
+            telefono=form.telefono.data,
+            direccion=form.direccion.data,
+            cif=form.cif.data,
+            porcentaje_descuento=form.porcentaje_descuento.data,
+            iva=form.iva.data
         )
         db.session.add(nuevo_proveedor)
         db.session.commit()
