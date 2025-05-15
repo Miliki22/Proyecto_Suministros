@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block title %}Mis Estadísticas{% endblock %}
+
+{% block content %}
+<h2 class="animated fadeInDown">Resumen de mis compras</h2>
+
+<img src="{{ url_for('static', filename=grafico) }}" alt="Mis estadísticas"
+     style="width: 600px; height: auto; display: block; margin: auto;">
+
+<div style="text-align: center; margin-top: 20px;">
+  <p><strong>Total gastado:</strong> ${{ total }}</p>
+  <p><strong>Productos diferentes comprados:</strong> {{ cantidad }}</p>
+</div>
+
+<p style="text-align: center; margin-top: 20px;">
+  <a href="{{ url_for('main.dashboard') }}">← Volver al inicio</a>
+</p>
+{% endblock %}

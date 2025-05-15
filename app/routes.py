@@ -291,3 +291,54 @@ def estadisticas_beneficios():
 
     return render_template('estadisticas_beneficios.html', grafico=nombre_grafico)
 
+@main.route('/mis_estadisticas')
+@login_required
+def mis_estadisticas():
+    ventas = Venta.query.filter_by(usuario_id=current_user.id).all()
+
+    if not ventas:
+        flash("Aún no realizaste compras.")
+        return redirect(url_for('main.dashboard'))
+
+    productos = [v.producto.nombre for v in ventas]
+    cantidades = [v.cantidad for v in ventas]
+    totales = [v.total for v in ventas]
+
+    df = pd.DataFrame({
+        'producto': productos,
+        'cantidad': cantidades,
+        'total': totales
+    })
+
+    resumen = df.groupby('producto')['cantidad'].sum()
+
+    # Borrar gráficos viejos
+    for archivo in os.listdir('app/static'):
+        if archivo.startswith('mis_estadisticas_') and archivo.endswith('.png'):
+            os.remove(os.path.join('app/static', archivo))
+
+    # Guardar gráfico con nombre único
+    timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
+    nombre_grafico = f'mis_estadisticas_{timestamp}.png'
+    ruta_grafico = os.path.join('app', 'static', nombre_grafico)
+
+    # Generar gráfico
+    fig, ax = plt.subplots(figsize=(6, 4))
+    resumen.plot(kind='bar', color='royalblue', ax=ax)
+    ax.set_title('Mis compras por producto')
+    ax.set_ylabel('Cantidad')
+    ax.set_xlabel('Producto')
+    plt.tight_layout()
+    plt.savefig(ruta_grafico)
+    plt.close()
+
+    total_gastado = df['total'].sum()
+    cantidad_productos = df['producto'].nunique()
+
+    return render_template(
+        'mis_estadisticas.html',
+        grafico=nombre_grafico,
+        total=total_gastado,
+        cantidad=cantidad_productos
+    )
+

@@ -28,4 +28,7 @@
 {% else %}
   <p>No has realizado compras aún.</p>
 {% endif %}
+<p style="text-align: center; margin-top: 20px;">
+  <a href="{{ url_for('main.dashboard') }}">← Volver al inicio</a>
+</p>
 {% endblock %}
