@@ -196,3 +196,53 @@ def listar_ventas():
 def mis_compras():
     ventas = Venta.query.filter_by(usuario_id=current_user.id).order_by(Venta.fecha.desc()).all()
     return render_template('mis_compras.html', ventas=ventas)
+
+
+import pandas as pd
+import matplotlib
+matplotlib.use('Agg')  # Usar un backend no interactivo para matplotlib
+import matplotlib.pyplot as plt
+import os
+from flask import current_app
+from datetime import datetime
+
+@main.route('/estadisticas')
+@login_required
+def estadisticas():
+    ventas = db.session.query(Venta).all()
+    if not ventas:
+        flash("No hay ventas registradas aún.")
+        return redirect(url_for('main.dashboard'))
+
+    # Datos para el gráfico
+    productos = []
+    cantidades = []
+
+    for venta in ventas:
+        productos.append(venta.producto.nombre)
+        cantidades.append(venta.cantidad)
+
+    df = pd.DataFrame({'producto': productos, 'cantidad': cantidades})
+    resumen = df.groupby('producto')['cantidad'].sum()
+
+    # Limpiar gráficos viejos
+    for archivo in os.listdir('app/static'):
+        if archivo.startswith('ventas_por_producto_') and archivo.endswith('.png'):
+           os.remove(os.path.join('app/static', archivo))
+
+    # Nombre de archivo dinámico con timestamp
+    timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
+    nombre_archivo = f'ventas_por_producto_{timestamp}.png'
+    ruta_grafico = os.path.join('app', 'static', nombre_archivo)
+    
+    # Generar gráfico
+    fig, ax = plt.subplots(figsize=(6, 4))
+    resumen.plot(kind='bar', color='goldenrod', ax=ax)
+    ax.set_title('Ventas por producto')
+    ax.set_xlabel('Producto')
+    ax.set_ylabel('Cantidad vendida')
+    plt.tight_layout()
+    plt.savefig(ruta_grafico)
+    plt.close()
+
+    return render_template('estadisticas.html', grafico=nombre_archivo)

@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block title %}Estadísticas de Ventas{% endblock %}
+
+{% block content %}
+<h2 class="animated fadeInDown">Estadísticas de Ventas</h2>
+
+{% if grafico %}
+  <img src="{{ url_for('static', filename=grafico) }}" alt="Gráfico de ventas" 
+       style="width: 600px; height: auto; display: block; margin: auto;">
+{% else %}
+  <p>No hay datos suficientes para mostrar estadísticas.</p>
+{% endif %}
+
+<p style="text-align: center; margin-top: 20px;">
+  <a href="{{ url_for('main.dashboard') }}">← Volver al inicio</a>
+</p>
+{% endblock %}
