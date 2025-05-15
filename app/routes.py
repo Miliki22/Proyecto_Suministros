@@ -246,3 +246,48 @@ def estadisticas():
     plt.close()
 
     return render_template('estadisticas.html', grafico=nombre_archivo)
+
+@main.route('/estadisticas/beneficios')
+@login_required
+def estadisticas_beneficios():
+    productos = Producto.query.all()
+
+    if not productos:
+        flash("No hay productos registrados aún.")
+        return redirect(url_for('main.dashboard'))
+
+    nombres = []
+    precios = []
+    costos = []
+
+    for p in productos:
+        nombres.append(p.nombre)
+        precios.append(p.precio)
+        costos.append(p.costo_proveedor)
+
+    df = pd.DataFrame({
+        'Producto': nombres,
+        'Precio Venta': precios,
+        'Costo Proveedor': costos
+    })
+
+    # Eliminar gráficos viejos
+    for archivo in os.listdir('app/static'):
+        if archivo.startswith('comparativa_beneficios_') and archivo.endswith('.png'):
+            os.remove(os.path.join('app/static', archivo))
+
+    # Crear gráfico
+    timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
+    nombre_grafico = f'comparativa_beneficios_{timestamp}.png'
+    ruta_grafico = os.path.join('app', 'static', nombre_grafico)
+
+    fig, ax = plt.subplots(figsize=(7, 4))
+    df.set_index('Producto')[['Precio Venta', 'Costo Proveedor']].plot(kind='bar', ax=ax)
+    ax.set_title('Comparativa de Precios vs Costos')
+    ax.set_ylabel('Valor ($)')
+    plt.tight_layout()
+    plt.savefig(ruta_grafico)
+    plt.close()
+
+    return render_template('estadisticas_beneficios.html', grafico=nombre_grafico)
+
