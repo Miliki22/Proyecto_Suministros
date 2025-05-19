@@ -9,7 +9,7 @@ app.app_context().push()
 if not User.query.filter_by(username='admin').first():
     admin = User(
         username='admin',
-        email='admin@example.com',  # 👈 AGREGÁ ESTE CAMPO
+        email='admin@example.com',  
         password=generate_password_hash('TokioSchool25'),
         role='admin'
     )

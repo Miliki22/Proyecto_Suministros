@@ -342,3 +342,50 @@ def mis_estadisticas():
         cantidad=cantidad_productos
     )
 
+@main.route('/estadisticas_mensuales')
+@login_required
+def estadisticas_mensuales():
+    if current_user.role != 'admin':
+        flash("Acceso denegado.")
+        return redirect(url_for('main.dashboard'))
+
+    ventas = db.session.query(Venta).all()
+    if not ventas:
+        flash("No hay ventas registradas aún.")
+        return redirect(url_for('main.dashboard'))
+
+    # Agrupar por mes
+    fechas = []
+    cantidades = []
+    for venta in ventas:
+        fechas.append(venta.fecha.strftime('%Y-%m'))
+        cantidades.append(venta.cantidad)
+
+    df = pd.DataFrame({'mes': fechas, 'cantidad': cantidades})
+    resumen = df.groupby('mes')['cantidad'].sum().sort_index()
+
+    # Ruta y nombre del gráfico dinámico
+    timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
+    nombre_archivo = f'ventas_mensuales_{timestamp}.png'
+    ruta_grafico = os.path.join('app', 'static', nombre_archivo)
+
+    # Eliminar gráficos anteriores de esta ruta
+    for archivo in os.listdir(os.path.join('app', 'static')):
+        if archivo.startswith('ventas_mensuales_'):
+            os.remove(os.path.join('app', 'static', archivo))
+
+    # Generar gráfico de líneas
+    fig, ax = plt.subplots(figsize=(6, 4), facecolor='white')  # fondo blanco
+    resumen.plot(kind='bar', color='teal', ax=ax)  # barras más delgadas
+    ax.set_title('Ventas mensuales')
+    ax.set_xlabel('Mes')
+    ax.set_ylabel('Cantidad vendida')
+    ax.grid(False)
+   # Eliminar borde superior y derecho del gráfico para que se vea más limpio
+    ax.spines['right'].set_visible(False)
+    ax.spines['top'].set_visible(False)
+    plt.tight_layout()
+    plt.savefig(ruta_grafico, facecolor='white')
+    plt.close()
+
+    return render_template('estadisticas_mensuales.html', grafico=nombre_archivo)
