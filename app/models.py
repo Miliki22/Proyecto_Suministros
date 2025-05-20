@@ -40,6 +40,10 @@ class Producto(db.Model):
     stock_maximo = db.Column(db.Integer, nullable=False)
     proveedor_id = db.Column(db.Integer, db.ForeignKey('proveedor.id'), nullable=False)
 
+    # Relación con ventas
+    ventas = db.relationship('Venta', backref='producto', lazy=True)
+
+
     def __repr__(self):
         return f"<Producto {self.nombre}>"
 
@@ -51,7 +55,6 @@ class Venta(db.Model):
     cantidad = db.Column(db.Integer, nullable=False)
     total = db.Column(db.Float, nullable=False)
     fecha = db.Column(db.DateTime, default=datetime.utcnow)
-    producto = db.relationship('Producto', backref='ventas')
-
+    
     def __repr__(self):
         return f"<Venta {self.id} - Producto {self.producto_id} - Usuario {self.usuario_id}>"

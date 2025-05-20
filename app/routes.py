@@ -62,10 +62,16 @@ def eliminar_producto(id):
         return redirect(url_for('main.dashboard'))
 
     producto = Producto.query.get_or_404(id)
+
+    if producto.ventas:  # Verifica si el producto tiene ventas asociadas
+        flash('No se puede eliminar el producto porque tiene ventas registradas.')
+        return redirect(url_for('main.listar_productos'))
+
     db.session.delete(producto)
     db.session.commit()
     flash(f'Producto "{producto.nombre}" eliminado correctamente.')
     return redirect(url_for('main.listar_productos'))
+
 
 @main.route('/editar_producto/<int:id>', methods=['GET', 'POST'])
 @login_required
@@ -196,6 +202,19 @@ def listar_ventas():
 def mis_compras():
     ventas = Venta.query.filter_by(usuario_id=current_user.id).order_by(Venta.fecha.desc()).all()
     return render_template('mis_compras.html', ventas=ventas)
+
+@main.route('/eliminar_compra/<int:id>', methods=['POST'])
+@login_required
+def eliminar_compra(id):
+    compra = Venta.query.get_or_404(id)
+    if compra.usuario_id != current_user.id:
+        flash("No tienes permiso para eliminar esta compra.")
+        return redirect(url_for('main.mis_compras'))
+
+    db.session.delete(compra)
+    db.session.commit()
+    flash("Compra eliminada correctamente.")
+    return redirect(url_for('main.mis_compras'))
 
 
 import pandas as pd
