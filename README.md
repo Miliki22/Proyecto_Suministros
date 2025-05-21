@@ -75,4 +75,18 @@ flask run
 - Buscador de productos.
 - Exportación de datos a CSV.
 
+---
+
+### 🎨 Mejora visual: Ilustración en la pantalla de inicio
+
+Se agregó una imagen ilustrativa en la página principal (`index.html`) para transmitir visualmente el propósito de la aplicación (gestión de suministros informáticos).  
+La imagen combina elementos tecnológicos como computadoras, gráficos y periféricos, manteniendo la armonía con el fondo degradado del sitio.
+
+🔧 **Archivo modificado:**
+- `app/templates/index.html`
+
+📁 **Nuevo recurso:**
+- `app/static/img_inicio.png`
+
+
 © 2025 - Proyecto educativo y de práctica profesional en desarrollo web con Python.
