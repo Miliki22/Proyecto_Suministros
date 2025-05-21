@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, request, flash, redirect, url_for # Importa Blueprint para agrupar rutas, y render_template para cargar HTML
 from flask_login import login_required, current_user  # Importa decoradores para requerir autenticación y obtener el usuario actual
 from .models import User, Proveedor, Producto, Venta  # Importa los modelos de la base de datos
-from .forms import ProductoForm, ProveedorForm, VentaForm # Importa el formulario para productos
+from .forms import ProductoForm, ProveedorForm, VentaForm # Importa el formulario para productos, proveedor y venta
 from app import db  # Importa la instancia de SQLAlchemy para interactuar con la base de datos
 
 main = Blueprint('main', __name__)   # Crea un Blueprint llamado 'main' para agrupar las rutas principales de la aplicación (no de autenticación)
