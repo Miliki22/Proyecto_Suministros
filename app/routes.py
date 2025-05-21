@@ -30,12 +30,14 @@ print('listar_productos')
 @main.route('/registrar_producto', methods=['GET', 'POST'])
 @login_required
 def registrar_producto():
-    if current_user.role != 'admin':
+    if current_user.role != 'admin':         # Verifica si el usuario es administrador antes de permitir registrar un producto.
         flash('Acceso denegado')
         return redirect(url_for('main.dashboard'))
 
-    form = ProductoForm()
-    form.proveedor_id.choices = [(p.id, p.nombre) for p in Proveedor.query.all()]
+    form = ProductoForm()       # Inicializa el formulario con los datos actuales del producto para su edición.
+    
+    # Carga las opciones del campo proveedor en el formulario con todos los proveedores disponibles desde la base de datos.
+    form.proveedor_id.choices = [(p.id, p.nombre) for p in Proveedor.query.all()]  
 
     if form.validate_on_submit():
         nuevo_producto = Producto(
@@ -63,7 +65,7 @@ def eliminar_producto(id):
 
     producto = Producto.query.get_or_404(id)
 
-    if producto.ventas:  # Verifica si el producto tiene ventas asociadas
+    if producto.ventas:  # Verifica si el producto tiene ventas asociadas antes de eliminarlo
         flash('No se puede eliminar el producto porque tiene ventas registradas.')
         return redirect(url_for('main.listar_productos'))
 
@@ -186,7 +188,7 @@ def realizar_venta():
             flash('Stock insuficiente para realizar la venta.')
             return redirect(url_for('main.realizar_venta'))
 
-        total = producto.precio * form.cantidad.data
+        total = producto.precio * form.cantidad.data         # Calcula el total de la venta en base al precio y cantidad.
 
         nueva_venta = Venta(
             producto_id=producto.id,
@@ -411,9 +413,8 @@ def estadisticas_mensuales():
             os.remove(os.path.join('app', 'static', archivo))
 
     # Generar gráfico de líneas
-    fig, ax = plt.subplots(figsize=(6, 4), facecolor='white')  # fondo blanco
-    resumen.plot(kind='bar', color='teal', ax=ax)  # barras más delgadas
-    ax.set_title('Ventas mensuales')
+    fig, ax = plt.subplots(figsize=(6, 4), facecolor='white')  
+    resumen.plot(kind='bar', color='teal', ax=ax)  # Dibuja un gráfico de barras para representar las ventas mensuales.
     ax.set_xlabel('Mes')
     ax.set_ylabel('Cantidad vendida')
     ax.grid(False)
