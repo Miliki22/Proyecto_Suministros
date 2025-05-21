@@ -29,7 +29,7 @@ Aplicación web desarrollada con **Python, Flask y SQLite** para gestionar produ
 ### 6. Estadísticas y gráficas (solo administrador)
 - 📊 **Ventas por producto**: gráfico de barras.
 - 📈 **Ventas mensuales**: gráfico por mes.
-- 📉 **Comparativa de beneficios**: *(próximamente)*.
+- 📉 **Comparativa de beneficios**: grafico de beneficio segun precio de venta y costo proveedor.
 
 ### 7. Experiencia de usuario
 - Interfaz intuitiva y responsiva.
