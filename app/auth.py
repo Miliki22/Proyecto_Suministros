@@ -28,24 +28,27 @@ def logout():
     logout_user()  # Cierra la sesión del usuario
     return redirect(url_for('main.index'))  # Redirige a la página principal después de cerrar sesión (index)
 
+# Ruta para registrar nuevos usuarios
 @auth.route('/register', methods=['GET', 'POST'])
 def register():
-    form = RegistroForm()
+    form = RegistroForm()     # Se crea una instancia del formulario de registro
 
-    if form.validate_on_submit():
-        if form.password.data != form.confirm_password.data:
+    if form.validate_on_submit():    # Se valida que el formulario haya sido enviado correctamente
+        if form.password.data != form.confirm_password.data:    # Verifica que ambas contraseñas coincidan
             flash("Las contraseñas no coinciden.")
             return render_template('register.html', form=form)
 
+        # Verifica si ya existe un usuario con ese nombre
         usuario_existente = User.query.filter_by(username=form.username.data).first()
         if usuario_existente:
             flash("El nombre de usuario ya está registrado.")
             return render_template('register.html', form=form)
 
+        # Si es válido, crea un nuevo usuario con rol por defecto 'user'
         nuevo_usuario = User(
             username=form.username.data,
             email=form.email.data,  
-            password=generate_password_hash(form.password.data),
+            password=generate_password_hash(form.password.data),  # Hashea la contraseña
             role='user'
         )
         db.session.add(nuevo_usuario)
@@ -53,4 +56,5 @@ def register():
         flash("Registro exitoso. Ahora puedes iniciar sesión.")
         return redirect(url_for('auth.login'))
 
+    # Renderiza el formulario si aún no se ha enviado o hay errores
     return render_template('register.html', form=form)
