@@ -28,11 +28,12 @@
         <td>{{ proveedor.cif or '-' }}</td>
         <td>{{ proveedor.porcentaje_descuento or '0' }}%</td>
         <td>{{ proveedor.iva or '0' }}%</td>
-        <td>
-          <form action="{{ url_for('main.eliminar_proveedor', id=proveedor.id) }}" method="POST" style="display:inline;">
-            <button type="submit" onclick="return confirm('¿Eliminar este proveedor?')">Eliminar</button>
+        <td style="white-space: nowrap; text-align: center;">
+          <a href="{{ url_for('main.editar_proveedor', id=proveedor.id) }}" class="boton-accion">Editar</a>
+          <form action="{{ url_for('main.eliminar_proveedor', id=proveedor.id) }}" method="POST" class="inline-form">
+            <button type="submit" class="boton-accion" onclick="return confirm('¿Eliminar este proveedor?');">Eliminar</button>
           </form>
-        </td>
+        </td>              
       </tr>
       {% endfor %}
     </tbody>

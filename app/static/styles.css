@@ -57,3 +57,26 @@ li {
     margin-bottom: 0.5rem;
     border-radius: 5px;
 }
+
+.boton-accion {
+    background-color: #28a745; /* Verde suave */
+    color: white;
+    border: none;
+    padding: 5px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.2s ease;
+  }
+  
+  .boton-accion:hover {
+    background-color: #218838; /* Más oscuro al pasar el mouse */
+  }
+  
+  form.inline-form {
+    display: inline;
+    margin: 0;
+    padding: 0;
+    box-shadow: none;
+  }
+  

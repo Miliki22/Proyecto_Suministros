@@ -22,9 +22,9 @@
         <td>{{ venta.producto.nombre }}</td>
         <td>{{ venta.cantidad }}</td>
         <td>${{ venta.total }}</td>
-        <td>
-          <form action="{{ url_for('main.eliminar_compra', id=venta.id) }}" method="POST" onsubmit="return confirm('¿Eliminar esta compra?');">
-            <button type="submit">Eliminar</button>
+        <td style="text-align: center;">
+          <form action="{{ url_for('main.eliminar_compra', id=venta.id) }}" method="POST" class="inline-form">
+            <button type="submit" class="boton-accion" onclick="return confirm('¿Eliminar esta compra?');">Eliminar</button>
           </form>
         </td>
       </tr>

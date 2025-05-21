@@ -151,6 +151,23 @@ def eliminar_proveedor(id):
 
     return redirect(url_for('main.listar_proveedores'))
 
+@main.route('/editar_proveedor/<int:id>', methods=['GET', 'POST'])
+@login_required
+def editar_proveedor(id):
+    proveedor = Proveedor.query.get_or_404(id)
+    form = ProveedorForm(obj=proveedor)
+    if form.validate_on_submit():
+        proveedor.nombre = form.nombre.data
+        proveedor.email = form.email.data
+        proveedor.telefono = form.telefono.data
+        proveedor.direccion = form.direccion.data
+        proveedor.cif = form.cif.data
+        proveedor.porcentaje_descuento = form.porcentaje_descuento.data
+        proveedor.iva = form.iva.data
+        db.session.commit()
+        flash("Proveedor actualizado correctamente.")
+        return redirect(url_for('main.listar_proveedores'))
+    return render_template('registrar_proveedor.html', form=form, editar=True)
 
 @main.route('/realizar_venta', methods=['GET', 'POST'])
 @login_required
